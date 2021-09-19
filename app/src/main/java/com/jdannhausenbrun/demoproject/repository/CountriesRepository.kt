@@ -3,6 +3,7 @@ package com.jdannhausenbrun.demoproject.repository
 import com.jdannhausenbrun.demoproject.database.daos.CountryDao
 import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.network.CountriesRestServer
+import com.jdannhausenbrun.demoproject.network.entities.CountryDetailsResponse
 import kotlinx.coroutines.flow.Flow
 import toothpick.ktp.KTP
 import toothpick.ktp.delegate.inject
@@ -23,6 +24,15 @@ class CountriesRepository {
             } ?: emptyList()
 
             countryDao.insertAll(countries)
+        }
+    }
+
+    suspend fun getCountryDetails(alpha3Code: String): CountryDetailsResponse? {
+        val response = countriesServer.getCountryDetails(alpha3Code).execute()
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            null
         }
     }
 

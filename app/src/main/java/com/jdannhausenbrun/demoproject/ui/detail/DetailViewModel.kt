@@ -1,13 +1,23 @@
 package com.jdannhausenbrun.demoproject.ui.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.jdannhausenbrun.demoproject.network.entities.CountryDetailsResponse
+import com.jdannhausenbrun.demoproject.repository.CountriesRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import toothpick.ktp.KTP
+import toothpick.ktp.delegate.inject
 
 class DetailViewModel : ViewModel() {
+    private val countriesRepository: CountriesRepository by inject()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+    init {
+        KTP.openRootScope().inject(this)
     }
-    val text: LiveData<String> = _text
+
+    fun getCountries(alpha3Code: String): Flow<CountryDetailsResponse?> {
+        return flow {
+            emit(countriesRepository.getCountryDetails(alpha3Code))
+        }
+    }
 }
