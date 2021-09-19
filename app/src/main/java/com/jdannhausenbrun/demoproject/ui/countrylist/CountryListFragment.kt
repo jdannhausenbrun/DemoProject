@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -16,10 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import toothpick.ktp.KTP
+import toothpick.ktp.delegate.inject
+import toothpick.smoothie.viewmodel.closeOnViewModelCleared
+import toothpick.smoothie.viewmodel.installViewModelBinding
 
 class CountryListFragment : Fragment() {
-
-    private lateinit var countryListViewModel: CountryListViewModel
+    private val countryListViewModel: CountryListViewModel by inject()
     private var _binding: FragmentCountryListBinding? = null
 
     // This property is only valid between onCreateView and
@@ -31,7 +33,10 @@ class CountryListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        countryListViewModel = ViewModelProvider(this).get(CountryListViewModel::class.java)
+        KTP.openRootScope().openSubScope(CountryListViewModel::class.java)
+            .installViewModelBinding<CountryListViewModel>(this)
+            .closeOnViewModelCleared(this)
+            .inject(this)
 
         _binding = FragmentCountryListBinding.inflate(inflater, container, false)
 
