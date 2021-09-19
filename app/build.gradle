@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -13,6 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
 
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -35,6 +37,29 @@ android {
 }
 
 dependencies {
+    def RETROFIT_MOSHI_VER="2.4.0"
+    def MOSHI_VER="1.11.0"
+    def ROOM_VERSION = "2.3.0"
+    def TOOTHPICK_VERSION = "3.1.0"
+
+    implementation "androidx.room:room-ktx:$ROOM_VERSION"
+    implementation "androidx.room:room-runtime:$ROOM_VERSION"
+    kapt "androidx.room:room-compiler:$ROOM_VERSION"
+
+    implementation "com.squareup.retrofit2:retrofit:2.6.0"
+    implementation "com.squareup.retrofit2:converter-moshi:$RETROFIT_MOSHI_VER"
+    implementation "com.squareup.moshi:moshi:$MOSHI_VER"
+    implementation "com.squareup.moshi:moshi-kotlin:$MOSHI_VER"
+    implementation "com.squareup.moshi:moshi-adapters:$MOSHI_VER"
+
+    implementation "com.github.stephanenicolas.toothpick:smoothie-lifecycle:$TOOTHPICK_VERSION"
+    implementation "com.github.stephanenicolas.toothpick:smoothie-lifecycle-ktp:$TOOTHPICK_VERSION"
+    implementation "com.github.stephanenicolas.toothpick:smoothie-lifecycle-viewmodel-ktp:$TOOTHPICK_VERSION"
+    implementation "com.github.stephanenicolas.toothpick:ktp:$TOOTHPICK_VERSION"
+    implementation "com.github.stephanenicolas.toothpick:toothpick-runtime:$TOOTHPICK_VERSION"
+    kapt "com.github.stephanenicolas.toothpick:toothpick-compiler:$TOOTHPICK_VERSION"
+
+    implementation "androidx.multidex:multidex:2.0.1"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.6.0'
