@@ -15,7 +15,7 @@ class DetailViewModel : ViewModel() {
         KTP.openRootScope().inject(this)
     }
 
-    fun getCountries(alpha3Code: String): Flow<CountryDetailsResponse?> {
+    fun getCountryDetails(alpha3Code: String): Flow<CountryDetailsResponse?> {
         return flow {
             emit(countriesRepository.getCountryDetails(alpha3Code))
         }

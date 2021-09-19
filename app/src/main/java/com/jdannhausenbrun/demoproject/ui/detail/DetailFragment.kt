@@ -40,7 +40,7 @@ class DetailFragment : Fragment() {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
 
         lifecycleScope.launch(Dispatchers.IO) {
-            detailViewModel.getCountries(args.type).collect {
+            detailViewModel.getCountryDetails(args.type).collect {
                 withContext(Dispatchers.Main) {
                     binding.name.text = it?.name ?: ""
                     binding.capital.text = requireContext().getString(R.string.capital_display).format(it?.capital ?: "")
