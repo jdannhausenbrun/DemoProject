@@ -3,6 +3,7 @@ package com.jdannhausenbrun.demoproject.repository
 import com.jdannhausenbrun.demoproject.database.daos.CountryDao
 import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.network.CountriesRestServer
+import kotlinx.coroutines.flow.Flow
 import toothpick.ktp.KTP
 import toothpick.ktp.delegate.inject
 
@@ -23,5 +24,9 @@ class CountriesRepository {
 
             countryDao.insertAll(countries)
         }
+    }
+
+    suspend fun getCountries(): Flow<List<Country>> {
+        return countryDao.getAll()
     }
 }

@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.jdannhausenbrun.demoproject.databinding.FragmentDashboardBinding
+import androidx.navigation.fragment.navArgs
+import com.jdannhausenbrun.demoproject.databinding.FragmentDetailBinding
 
 class DetailFragment : Fragment() {
-
+    private val args by navArgs<DetailFragmentArgs>()
     private lateinit var detailViewModel: DetailViewModel
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentDetailBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -23,18 +22,14 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        detailViewModel =
-            ViewModelProvider(this).get(DetailViewModel::class.java)
+    ): View {
+        detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        _binding = FragmentDetailBinding.inflate(inflater, container, false)
 
-        val textView: TextView = binding.textDashboard
-        detailViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        binding.textDashboard.text = args.type
+
+        return binding.root
     }
 
     override fun onDestroyView() {
