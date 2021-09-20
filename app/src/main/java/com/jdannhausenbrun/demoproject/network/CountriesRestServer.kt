@@ -15,7 +15,7 @@ interface CountriesRestServer {
     @GET("all?fields=name;alpha3Code")
     fun getCountries(): Call<List<CountryResponse>>
 
-    @GET("alpha/{countryCode}?fields=name;capital;alpha3Code;region;subregion;population")
+    @GET("alpha/{countryCode}?fields=name;capital;alpha3Code;region;subregion;population;flag")
     fun getCountryDetails(@Path("countryCode") countryCode: String): Call<CountryDetailsResponse>
 
     object Builder {

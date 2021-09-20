@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import coil.request.ImageRequest
 import com.jdannhausenbrun.demoproject.R
+import com.jdannhausenbrun.demoproject.common.CoilSVGLoader
 import com.jdannhausenbrun.demoproject.databinding.FragmentDetailBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -42,6 +44,14 @@ class DetailFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             detailViewModel.getCountryDetails(args.type).collect {
                 withContext(Dispatchers.Main) {
+                    CoilSVGLoader.getInstance(requireContext()).enqueue(
+                        ImageRequest.Builder(requireContext())
+                            .data(it?.flag)
+                        .target { drawable ->
+                            binding.flagView.setImageDrawable(drawable)
+                        }.build()
+                    )
+
                     binding.name.text = it?.name ?: ""
                     binding.capital.text = requireContext().getString(R.string.capital_display).format(it?.capital ?: "")
                     binding.region.text = requireContext().getString(R.string.region_display).format(it?.region ?: "")
