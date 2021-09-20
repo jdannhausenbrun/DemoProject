@@ -21,7 +21,6 @@
             android:layout_margin="12dp"
             android:textAlignment="center"
             android:textSize="24sp"
-            android:textStyle="bold"
             tool:text="Country" />
     </androidx.cardview.widget.CardView>
 

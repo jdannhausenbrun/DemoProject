@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.jdannhausenbrun.demoproject.R
 import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.databinding.FragmentCountryListBinding
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +47,7 @@ class CountryListFragment : Fragment() {
         binding.list.adapter = CountryListAdapter()
         binding.list.layoutManager = LinearLayoutManager(context)
 
+        binding.searchView.queryHint = requireContext().getString(R.string.country_search_hint)
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
