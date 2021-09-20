@@ -12,6 +12,9 @@ interface CountryDao {
     @Query("SELECT * FROM Country")
     fun getAll(): Flow<List<Country>>
 
+    @Query("SELECT * FROM Country WHERE name LIKE '%' || :query || '%'  ")
+    fun getByName(query: String): Flow<List<Country>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(countries: List<Country>)
 }

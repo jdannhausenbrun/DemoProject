@@ -62,4 +62,24 @@ class CountryDaoTest {
         assertEquals(2, result.size)
         assertEquals("Country 22", result[1].name)
     }
+
+    @Test
+    fun testSearch() = runBlocking {
+        testDB.countryDao().insertAll(
+            listOf(
+                Country("cd1", "Country 1"),
+                Country("cd2", "Country 2")
+            )
+        )
+
+        var result = testDB.countryDao().getByName("").first()
+        assertEquals(2, result.size)
+
+        result = testDB.countryDao().getByName("1").first()
+        assertEquals(1, result.size)
+        assertEquals("Country 1", result[0].name)
+
+        result = testDB.countryDao().getByName("123").first()
+        assertEquals(0, result.size)
+    }
 }

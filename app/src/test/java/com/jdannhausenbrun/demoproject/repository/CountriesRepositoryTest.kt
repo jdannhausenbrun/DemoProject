@@ -70,6 +70,12 @@ class CountriesRepositoryTest {
         coVerify(exactly = 1) { dao.getAll() }
     }
 
+    @Test
+    fun testSearchCountries() = runBlocking {
+        repository.searchCountries("test")
+        coVerify(exactly = 1) { dao.getByName("test") }
+    }
+
     @After
     fun teardown() {
         Toothpick.reset()

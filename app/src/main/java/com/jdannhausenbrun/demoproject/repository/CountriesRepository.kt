@@ -36,7 +36,11 @@ class CountriesRepository {
         }
     }
 
-    suspend fun getCountries(): Flow<List<Country>> {
+    fun getCountries(): Flow<List<Country>> {
         return countryDao.getAll()
+    }
+
+    fun searchCountries(query: String): Flow<List<Country>> {
+        return countryDao.getByName(query)
     }
 }

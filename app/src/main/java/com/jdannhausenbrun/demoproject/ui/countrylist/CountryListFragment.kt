@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.databinding.FragmentCountryListBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,6 +22,7 @@ import toothpick.ktp.delegate.inject
 import toothpick.smoothie.viewmodel.closeOnViewModelCleared
 import toothpick.smoothie.viewmodel.installViewModelBinding
 
+@ExperimentalCoroutinesApi
 class CountryListFragment : Fragment() {
     private val countryListViewModel: CountryListViewModel by inject()
     private var _binding: FragmentCountryListBinding? = null
@@ -43,8 +46,19 @@ class CountryListFragment : Fragment() {
         binding.list.adapter = CountryListAdapter()
         binding.list.layoutManager = LinearLayoutManager(context)
 
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                countryListViewModel.search(query)
+                return true
+            }
+        })
+
         lifecycleScope.launch(Dispatchers.IO) {
-            countryListViewModel.getCountries().collect {
+            countryListViewModel.countries.collect {
                 withContext(Dispatchers.Main) {
                     (binding.list.adapter as ListAdapter<Country, RecyclerView.ViewHolder>).submitList(it)
                 }
