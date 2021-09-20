@@ -52,11 +52,12 @@ class DetailFragment : Fragment() {
                         }.build()
                     )
 
-                    binding.name.text = it?.name ?: ""
-                    binding.capital.text = requireContext().getString(R.string.capital_display).format(it?.capital ?: "")
-                    binding.region.text = requireContext().getString(R.string.region_display).format(it?.region ?: "")
-                    binding.subRegion.text = requireContext().getString(R.string.sub_region_display).format(it?.subregion ?: "")
-                    binding.population.text = requireContext().getString(R.string.population_display).format(it?.population ?: "")
+                    val missingData = requireContext().getString(R.string.double_dash)
+                    binding.name.text = it?.name ?: missingData
+                    binding.capital.text = requireContext().getString(R.string.capital_display).format(it?.capital ?: missingData)
+                    binding.region.text = requireContext().getString(R.string.region_display).format(it?.region ?: missingData)
+                    binding.subRegion.text = requireContext().getString(R.string.sub_region_display).format(it?.subregion ?: missingData)
+                    binding.population.text = requireContext().getString(R.string.population_display).format(it?.population ?: missingData)
                 }
             }
         }
