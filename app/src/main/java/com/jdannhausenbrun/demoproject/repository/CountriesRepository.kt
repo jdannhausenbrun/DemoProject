@@ -1,5 +1,6 @@
 package com.jdannhausenbrun.demoproject.repository
 
+import androidx.paging.PagingSource
 import com.jdannhausenbrun.demoproject.database.daos.CountryDao
 import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.network.CountriesRestServer
@@ -40,7 +41,7 @@ class CountriesRepository {
         return countryDao.getAll()
     }
 
-    fun searchCountries(query: String): Flow<List<Country>> {
+    fun searchCountries(query: String): PagingSource<Int, Country> {
         return countryDao.getByName(query)
     }
 }

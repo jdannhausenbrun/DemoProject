@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jdannhausenbrun.demoproject.R
 import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.databinding.ItemCountryBinding
 
-class CountryListAdapter: ListAdapter<Country, CountryListAdapter.CountryViewHolder>(DiffCallback()) {
+class CountryListAdapter: PagingDataAdapter<Country, CountryListAdapter.CountryViewHolder>(DiffCallback()) {
 
     inner class CountryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemCountryBinding.bind(itemView)

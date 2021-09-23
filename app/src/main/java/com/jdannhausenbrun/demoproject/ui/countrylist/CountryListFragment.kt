@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jdannhausenbrun.demoproject.R
 import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.databinding.FragmentCountryListBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import toothpick.ktp.KTP
@@ -60,9 +60,9 @@ class CountryListFragment : Fragment() {
         })
 
         lifecycleScope.launch(Dispatchers.IO) {
-            countryListViewModel.countries.collect {
+            countryListViewModel.countries.collectLatest {
                 withContext(Dispatchers.Main) {
-                    (binding.list.adapter as ListAdapter<Country, RecyclerView.ViewHolder>).submitList(it)
+                    (binding.list.adapter as PagingDataAdapter<Country, RecyclerView.ViewHolder>).submitData(it)
                 }
             }
         }

@@ -1,6 +1,9 @@
 package com.jdannhausenbrun.demoproject.ui.countrylist
 
 import androidx.lifecycle.ViewModel
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.repository.CountriesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,10 +20,12 @@ class CountryListViewModel : ViewModel() {
         KTP.openRootScope().inject(this)
     }
 
-    val countries: Flow<List<Country>> = searchQuery.debounce(200)
+    val countries: Flow<PagingData<Country>> = searchQuery.debounce(200)
         .distinctUntilChanged()
         .flatMapLatest {
-            countriesRepository.searchCountries(it)
+            Pager(PagingConfig(pageSize = 20)) {
+                countriesRepository.searchCountries(it)
+            }.flow
         }
 
     fun search(query: String?) {

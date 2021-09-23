@@ -1,5 +1,6 @@
 package com.jdannhausenbrun.demoproject.database.daos
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,7 +14,7 @@ interface CountryDao {
     fun getAll(): Flow<List<Country>>
 
     @Query("SELECT * FROM Country WHERE name LIKE '%' || :query || '%'  ")
-    fun getByName(query: String): Flow<List<Country>>
+    fun getByName(query: String): PagingSource<Int, Country>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(countries: List<Country>)
