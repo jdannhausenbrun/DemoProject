@@ -13,6 +13,7 @@ import toothpick.ktp.delegate.inject
 
 @ExperimentalCoroutinesApi
 class CountryListViewModel : ViewModel() {
+    private val PAGE_SIZE = 20
     private val countriesRepository: CountriesRepository by inject()
     private val searchQuery = MutableStateFlow("")
 
@@ -23,7 +24,7 @@ class CountryListViewModel : ViewModel() {
     val countries: Flow<PagingData<Country>> = searchQuery.debounce(200)
         .distinctUntilChanged()
         .flatMapLatest {
-            Pager(PagingConfig(pageSize = 20)) {
+            Pager(PagingConfig(pageSize = PAGE_SIZE)) {
                 countriesRepository.searchCountries(it)
             }.flow
         }

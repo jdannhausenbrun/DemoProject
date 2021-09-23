@@ -1,5 +1,6 @@
 package com.jdannhausenbrun.demoproject.database.daos
 
+import androidx.paging.PagingSource
 import androidx.test.core.app.ApplicationProvider
 import com.jdannhausenbrun.demoproject.DemoApplication
 import com.jdannhausenbrun.demoproject.database.entities.Country
@@ -64,22 +65,80 @@ class CountryDaoTest {
     }
 
     @Test
-    fun testSearch() = runBlocking {
-        testDB.countryDao().insertAll(
-            listOf(
-                Country("cd1", "Country 1"),
-                Country("cd2", "Country 2")
-            )
+    fun testEmptySearch() = runBlocking {
+        val data = listOf(
+            Country("cd1", "Country 1"),
+            Country("cd2", "Country 2")
         )
 
-        var result = testDB.countryDao().getByName("").first()
-        assertEquals(2, result.size)
+        testDB.countryDao().insertAll(data)
 
-        result = testDB.countryDao().getByName("1").first()
-        assertEquals(1, result.size)
-        assertEquals("Country 1", result[0].name)
+        val result = testDB.countryDao().getByName("").load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = 20,
+                placeholdersEnabled = false
+            )
+        )
+        val expected = PagingSource.LoadResult.Page(
+            data = data,
+            prevKey = null,
+            nextKey = null,
+            itemsBefore = 0,
+            itemsAfter = 0
+        )
+        assertEquals(expected, result)
+    }
 
-        result = testDB.countryDao().getByName("123").first()
-        assertEquals(0, result.size)
+    @Test
+    fun testSearchWithResults() = runBlocking {
+        val data = listOf(
+            Country("cd1", "Country 1"),
+            Country("cd2", "Country 2")
+        )
+
+        testDB.countryDao().insertAll(data)
+
+        val result = testDB.countryDao().getByName("1").load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = 20,
+                placeholdersEnabled = false
+            )
+        )
+        val expected = PagingSource.LoadResult.Page(
+            data = listOf(data[0]),
+            prevKey = null,
+            nextKey = null,
+            itemsBefore = 0,
+            itemsAfter = 0
+        )
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testSearchWithNoResults() = runBlocking {
+        val data = listOf(
+            Country("cd1", "Country 1"),
+            Country("cd2", "Country 2")
+        )
+
+        testDB.countryDao().insertAll(data)
+
+        val result = testDB.countryDao().getByName("123").load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = 20,
+                placeholdersEnabled = false
+            )
+        )
+        val expected = PagingSource.LoadResult.Page(
+            data = emptyList(),
+            prevKey = null,
+            nextKey = null,
+            itemsBefore = 0,
+            itemsAfter = 0
+        )
+        assertEquals(expected, result)
     }
 }

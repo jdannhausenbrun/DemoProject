@@ -54,7 +54,7 @@ class CountriesRepositoryTest {
 
     @Test
     fun testGetDetails() = runBlocking {
-        every { restServer.getCountryDetails(any()).execute() } returns Response.success(200, CountryDetailsResponse("name", "tes", "test", "test", "test", 1))
+        every { restServer.getCountryDetails(any()).execute() } returns Response.success(200, CountryDetailsResponse("name", "tes", "test", "test", "test", 1, arrayOf("test")))
         assertEquals("name", repository.getCountryDetails("tes")?.name)
     }
 
