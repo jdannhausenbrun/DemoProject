@@ -1,9 +1,7 @@
 package com.jdannhausenbrun.demoproject.ui.detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -20,7 +18,7 @@ import toothpick.ktp.delegate.inject
 import toothpick.smoothie.viewmodel.closeOnViewModelCleared
 import toothpick.smoothie.viewmodel.installViewModelBinding
 
-class DetailFragment : Fragment() {
+class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val args by navArgs<DetailFragmentArgs>()
     private val detailViewModel: DetailViewModel by inject()
     private var _binding: FragmentDetailBinding? = null
@@ -29,17 +27,17 @@ class DetailFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         KTP.openRootScope().openSubScope(DetailViewModel::class.java)
             .installViewModelBinding<DetailViewModel>(this)
             .closeOnViewModelCleared(this)
             .inject(this)
+    }
 
-        _binding = FragmentDetailBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentDetailBinding.bind(view)
 
         lifecycleScope.launch(Dispatchers.IO) {
             detailViewModel.getCountryDetails(args.type).collect {
@@ -61,8 +59,6 @@ class DetailFragment : Fragment() {
                 }
             }
         }
-
-        return binding.root
     }
 
     override fun onDestroyView() {

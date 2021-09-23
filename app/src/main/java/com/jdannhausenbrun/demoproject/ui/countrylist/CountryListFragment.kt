@@ -1,9 +1,7 @@
 package com.jdannhausenbrun.demoproject.ui.countrylist
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -17,14 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import toothpick.ktp.KTP
 import toothpick.ktp.delegate.inject
 import toothpick.smoothie.viewmodel.closeOnViewModelCleared
 import toothpick.smoothie.viewmodel.installViewModelBinding
 
 @ExperimentalCoroutinesApi
-class CountryListFragment : Fragment() {
+class CountryListFragment : Fragment(R.layout.fragment_country_list) {
     private val countryListViewModel: CountryListViewModel by inject()
     private var _binding: FragmentCountryListBinding? = null
 
@@ -32,17 +29,17 @@ class CountryListFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         KTP.openRootScope().openSubScope(CountryListViewModel::class.java)
             .installViewModelBinding<CountryListViewModel>(this)
             .closeOnViewModelCleared(this)
             .inject(this)
+    }
 
-        _binding = FragmentCountryListBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentCountryListBinding.bind(view)
 
         binding.list.adapter = CountryListAdapter()
         binding.list.layoutManager = LinearLayoutManager(context)
@@ -61,13 +58,9 @@ class CountryListFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             countryListViewModel.countries.collectLatest {
-                withContext(Dispatchers.Main) {
-                    (binding.list.adapter as PagingDataAdapter<Country, RecyclerView.ViewHolder>).submitData(it)
-                }
+                (binding.list.adapter as PagingDataAdapter<Country, RecyclerView.ViewHolder>).submitData(it)
             }
         }
-
-        return binding.root
     }
 
     override fun onDestroyView() {
