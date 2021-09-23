@@ -2,7 +2,7 @@
     <string name="app_name">DemoProject</string>
     <string name="capital_display">Capital: %1$s</string>
     <string name="region_display">Region: %1$s</string>
-    <string name="sub_region_display">Sub Region: %1$s</string>
+    <string name="continent_display">Continent: %1$s</string>
     <string name="population_display">Population: %1$d</string>
     <string name="country_search_hint">Discover A New Country...</string>
     <string name="double_dash" translatable="false">--</string>

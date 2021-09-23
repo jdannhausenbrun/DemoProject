@@ -12,10 +12,10 @@ import retrofit2.http.Path
 
 
 interface CountriesRestServer {
-    @GET("all?fields=name;alpha3Code")
+    @GET("all?fields=name,alpha3Code")
     fun getCountries(): Call<List<CountryResponse>>
 
-    @GET("alpha/{countryCode}?fields=name;capital;alpha3Code;region;subregion;population;flag")
+    @GET("alpha/{countryCode}?fields=name,capital,alpha3Code,continent,region,population,flags")
     fun getCountryDetails(@Path("countryCode") countryCode: String): Call<CountryDetailsResponse>
 
     object Builder {
@@ -25,7 +25,7 @@ interface CountriesRestServer {
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://restcountries.eu/rest/v2/")
+                .baseUrl("https://restcountries.com/v2/")
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .build()
 

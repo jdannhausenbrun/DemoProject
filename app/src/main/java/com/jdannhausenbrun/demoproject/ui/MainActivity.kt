@@ -1,16 +1,11 @@
 package com.jdannhausenbrun.demoproject.ui
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.lifecycle.lifecycleScope
 import com.jdannhausenbrun.demoproject.databinding.ActivityMainBinding
 import com.jdannhausenbrun.demoproject.repository.CountriesRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import toothpick.ktp.KTP
 import toothpick.ktp.delegate.inject
@@ -28,7 +23,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        GlobalScope.launch(Dispatchers.IO) {
+        // In the future, convert to a sync service with periodic and forced syncs
+        lifecycleScope.launch(Dispatchers.IO) {
             countriesRepository.syncCountries()
         }
     }
