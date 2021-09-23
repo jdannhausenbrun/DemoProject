@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import toothpick.ktp.KTP
 import toothpick.ktp.delegate.inject
 import toothpick.smoothie.viewmodel.closeOnViewModelCleared
@@ -61,9 +62,11 @@ class CountryListFragment : Fragment(R.layout.fragment_country_list) {
             }
         })
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            countryListViewModel.countries.collectLatest {
-                (binding.list.adapter as PagingDataAdapter<Country, RecyclerView.ViewHolder>).submitData(it)
+        lifecycleScope.launchWhenResumed {
+            withContext(Dispatchers.IO) {
+                countryListViewModel.countries.collectLatest {
+                    (binding.list.adapter as PagingDataAdapter<Country, RecyclerView.ViewHolder>).submitData(it)
+                }
             }
         }
     }
