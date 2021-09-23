@@ -32,4 +32,8 @@ class CountryListViewModel : ViewModel() {
     fun search(query: String?) {
         searchQuery.value = query ?: ""
     }
+
+    suspend fun syncFromNetwork() {
+        countriesRepository.syncCountries()
+    }
 }

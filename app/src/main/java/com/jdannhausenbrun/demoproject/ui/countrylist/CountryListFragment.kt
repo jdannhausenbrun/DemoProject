@@ -41,6 +41,11 @@ class CountryListFragment : Fragment(R.layout.fragment_country_list) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCountryListBinding.bind(view)
 
+        // In the future, convert to a sync service with periodic and forced syncs
+        lifecycleScope.launch(Dispatchers.IO) {
+            countryListViewModel.syncFromNetwork()
+        }
+
         binding.list.adapter = CountryListAdapter()
         binding.list.layoutManager = LinearLayoutManager(context)
 
