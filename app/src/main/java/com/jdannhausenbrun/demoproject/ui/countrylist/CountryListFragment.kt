@@ -3,13 +3,12 @@ package com.jdannhausenbrun.demoproject.ui.countrylist
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagingDataAdapter
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jdannhausenbrun.demoproject.R
-import com.jdannhausenbrun.demoproject.database.entities.Country
 import com.jdannhausenbrun.demoproject.databinding.FragmentCountryListBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +23,7 @@ import toothpick.smoothie.viewmodel.installViewModelBinding
 @ExperimentalCoroutinesApi
 class CountryListFragment : Fragment(R.layout.fragment_country_list) {
     private val countryListViewModel: CountryListViewModel by inject()
+    private lateinit var adapter: CountryListAdapter
     private var _binding: FragmentCountryListBinding? = null
 
     // This property is only valid between onCreateView and
@@ -47,7 +47,8 @@ class CountryListFragment : Fragment(R.layout.fragment_country_list) {
             countryListViewModel.syncFromNetwork()
         }
 
-        binding.list.adapter = CountryListAdapter()
+        adapter = CountryListAdapter()
+        binding.list.adapter = adapter
         binding.list.layoutManager = LinearLayoutManager(context)
 
         binding.searchView.queryHint = requireContext().getString(R.string.country_search_hint)
@@ -62,10 +63,16 @@ class CountryListFragment : Fragment(R.layout.fragment_country_list) {
             }
         })
 
+        adapter.addLoadStateListener { loadState ->
+            val isDataSetEmpty = loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1
+            binding.noResults.isVisible = isDataSetEmpty
+            binding.list.isVisible = !isDataSetEmpty
+        }
+
         lifecycleScope.launchWhenResumed {
             withContext(Dispatchers.IO) {
                 countryListViewModel.countries.collectLatest {
-                    (binding.list.adapter as PagingDataAdapter<Country, RecyclerView.ViewHolder>).submitData(it)
+                    adapter.submitData(it)
                 }
             }
         }

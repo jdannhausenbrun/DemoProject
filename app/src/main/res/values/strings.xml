@@ -6,4 +6,5 @@
     <string name="population_display">Population: %1$d</string>
     <string name="country_search_hint">Discover A New Country...</string>
     <string name="double_dash" translatable="false">--</string>
+    <string name="no_results">No Results</string>
 </resources>
