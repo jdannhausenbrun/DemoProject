@@ -28,11 +28,13 @@
         <ImageView
             android:id="@+id/flagView"
             android:background="@drawable/border"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:maxHeight="200dp"
             android:adjustViewBounds="true"
-            android:layout_margin="50dp" />
+            android:layout_margin="50dp"
+            android:visibility="gone"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

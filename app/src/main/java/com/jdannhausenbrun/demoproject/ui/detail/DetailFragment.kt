@@ -11,7 +11,6 @@ import com.jdannhausenbrun.demoproject.common.CoilSVGLoader
 import com.jdannhausenbrun.demoproject.databinding.FragmentDetailBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import toothpick.ktp.KTP
 import toothpick.ktp.delegate.inject
@@ -39,23 +38,26 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentDetailBinding.bind(view)
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            detailViewModel.getCountryDetails(args.type).collect {
-                withContext(Dispatchers.Main) {
-                    CoilSVGLoader.getInstance(requireContext()).enqueue(
-                        ImageRequest.Builder(requireContext())
-                            .data(it?.flags?.first())
-                        .target { drawable ->
-                            binding.flagView.setImageDrawable(drawable)
-                        }.build()
-                    )
+        lifecycleScope.launchWhenResumed {
+            withContext(Dispatchers.IO) {
+                detailViewModel.getCountryDetails(args.type).collect {
+                    withContext(Dispatchers.Main) {
+                        CoilSVGLoader.getInstance(requireContext()).enqueue(
+                            ImageRequest.Builder(requireContext())
+                                .data(it?.flags?.first())
+                                .target { drawable ->
+                                    binding.flagView.setImageDrawable(drawable)
+                                    binding.flagView.visibility = View.VISIBLE
+                                }.build()
+                        )
 
-                    val missingData = requireContext().getString(R.string.double_dash)
-                    binding.name.text = it?.name ?: missingData
-                    binding.capital.text = requireContext().getString(R.string.capital_display).format(it?.capital ?: missingData)
-                    binding.continent.text = requireContext().getString(R.string.continent_display).format(it?.continent ?: missingData)
-                    binding.region.text = requireContext().getString(R.string.region_display).format(it?.region ?: missingData)
-                    binding.population.text = requireContext().getString(R.string.population_display).format(it?.population ?: missingData)
+                        val missingData = requireContext().getString(R.string.double_dash)
+                        binding.name.text = it?.name ?: missingData
+                        binding.capital.text = requireContext().getString(R.string.capital_display).format(it?.capital ?: missingData)
+                        binding.continent.text = requireContext().getString(R.string.continent_display).format(it?.continent ?: missingData)
+                        binding.region.text = requireContext().getString(R.string.region_display).format(it?.region ?: missingData)
+                        binding.population.text = requireContext().getString(R.string.population_display).format(it?.population ?: missingData)
+                    }
                 }
             }
         }

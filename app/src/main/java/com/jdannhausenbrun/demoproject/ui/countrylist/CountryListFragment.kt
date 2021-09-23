@@ -6,6 +6,7 @@ import android.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jdannhausenbrun.demoproject.R
@@ -24,6 +25,7 @@ import toothpick.smoothie.viewmodel.installViewModelBinding
 class CountryListFragment : Fragment(R.layout.fragment_country_list) {
     private val countryListViewModel: CountryListViewModel by inject()
     private lateinit var adapter: CountryListAdapter
+    private lateinit var loadStateListener: (CombinedLoadStates) -> Unit
     private var _binding: FragmentCountryListBinding? = null
 
     // This property is only valid between onCreateView and
@@ -63,11 +65,12 @@ class CountryListFragment : Fragment(R.layout.fragment_country_list) {
             }
         })
 
-        adapter.addLoadStateListener { loadState ->
+        loadStateListener = { loadState ->
             val isDataSetEmpty = loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1
             binding.noResults.isVisible = isDataSetEmpty
             binding.list.isVisible = !isDataSetEmpty
         }
+        adapter.addLoadStateListener(loadStateListener)
 
         lifecycleScope.launchWhenResumed {
             withContext(Dispatchers.IO) {
@@ -80,6 +83,7 @@ class CountryListFragment : Fragment(R.layout.fragment_country_list) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        adapter.removeLoadStateListener(loadStateListener)
         _binding = null
     }
 }
