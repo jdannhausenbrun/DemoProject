@@ -6,6 +6,6 @@ data class CountryDetailsResponse(
     val capital: String?,
     val continent: String?,
     val region: String?,
-    val population: Int,
+    val population: Int?,
     val flags: Array<String>?
 )
